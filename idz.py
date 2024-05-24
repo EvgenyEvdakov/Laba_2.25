@@ -7,37 +7,37 @@
 # по абсолютному значению ε=10-7 и произвести сравнение полученной суммы с контрольным значением функции для
 # двух бесконечных рядов.
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import multiprocessing
 import math
 
-
-# Функция для вычисления суммы ряда
+# Функция для вычисления суммы ряда 
 def compute_series_sum(x, epsilon, result, series_type):
-    n = 0  # Начальное значение степени
-    term = (x ** (2 * n)) / math.factorial(2 * n)  # Вычисление первого члена ряда
-    series_sum = 0  # Инициализация переменной для хранения суммы ряда
+    n = 0
+    term = 1  # Начальный член ряда
+    series_sum = 0
 
-    # Выбор типа ряда для вычислений
     if series_type == 1:
-        # Цикл для вычисления суммы ряда до достижения точности epsilon
         while abs(term) > epsilon:
             series_sum += term
             n += 1
-            term = (x ** (2 * n)) / math.factorial(2 * n)
+            term *= (x ** 2) / ((2 * n - 1) * (2 * n))  # Рекуррентное соотношение
 
     elif series_type == 2:
-        # Цикл для вычисления суммы ряда с чередующимися знаками до достижения точности epsilon
+        sign = 1
         while abs(term) > epsilon:
-            series_sum += term
+            series_sum += sign * term
             n += 1
-            term = ((-1) ** n) * (x ** (2 * n)) / math.factorial(2 * n)
+            term *= (x ** 2) / ((2 * n - 1) * (2 * n))  # Рекуррентное соотношение
+            sign *= -1
 
     result.value = series_sum  # Запись результата в общую память
 
-
 def main():
-    x = 1 / 2  # Заданное значение x
-    epsilon = 1e-7  # Точность вычислений
+    x = 1 / 2
+    epsilon = 1e-7
 
     # Контрольные значения для сравнения
     control_value_1 = (math.exp(x) + math.exp(-x)) / 2
@@ -75,7 +75,6 @@ def main():
         print("Результат ряда 2 совпадает с контрольным значением.")
     else:
         print("Результат ряда 2 не совпадает с контрольным значением.")
-
 
 if __name__ == "__main__":
     main()
